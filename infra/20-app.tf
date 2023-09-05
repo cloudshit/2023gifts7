@@ -61,4 +61,32 @@ resource "aws_instance" "app" {
   tags = {
     Name = "skills-app"
   }
+
+  user_data = <<EOF
+    #!/bin/bash
+    yum install -y git
+
+    git clone https://github.com/cloudshit/2023gifts7.git /home/ec2-user/2023gifts7
+    chown ec2-user:ec2-user -R /home/ec2-user/2023gifts7
+    cd /home/ec2-user/2023gifts7/src
+
+    curl https://raw.githubusercontent.com/fluent/fluent-bit/master/install.sh | sh
+
+    ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+    TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+    INSTANCE_ID=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id`
+
+    sed -i "s/INSTANCE_ID/$INSTANCE_ID/" fluent-bit.conf
+
+    cp -f fluent-bit.conf /etc/fluent-bit/fluent-bit.conf
+    cp -f parsers.conf /etc/fluent-bit/parsers.conf
+
+    systemctl enable --now fluent-bit
+
+    python3 -m ensurepip
+    python3 -m pip install flask
+
+    nohup python3 app.py > /dev/null &
+  EOF
 }
