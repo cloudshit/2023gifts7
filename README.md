@@ -1,3 +1,8 @@
+proba:
+![](docs/a.png)
+![](docs/b.png)
+![](docs/c.png)
+
 ad-hoc:
 ```sql
 SELECT COUNT(*) FROM "wsi-glue-db"."wsi-glue-table" WHERE year='2023' and month='09' and "date"='04';
@@ -39,7 +44,7 @@ SELECT COUNT(*) FROM wsi_log_test WHERE MINUTE(`timestamp`) BETWEEN MINUTE(NOW()
 SELECT COUNT(*), `path`, `method`, `status_code` FROM wsi_log_test WHERE MINUTE(`timestamp`) BETWEEN MINUTE(NOW())-10 AND MINUTE(NOW()) GROUP BY `path`, `method`, `status_code`;
 ```
 
-redshift
+redshift:
 ```sql
 SELECT to_char("timestamp", 'YYYY-MM-DD HH24'), count(*) FROM "wsi"."wsi_schema"."wsi_logs" group by 1;
 ```
