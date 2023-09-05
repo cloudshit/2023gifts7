@@ -14,6 +14,11 @@ terraform {
       source = "hashicorp/local"
       version = "2.4.0"
     }
+
+    random = {
+      source = "hashicorp/random"
+      version = "3.5.1"
+    }
   }
 }
 
@@ -26,6 +31,9 @@ provider "tls" {
 }
 
 provider "local" {
+}
+
+provider "random" {
 }
 
 data "aws_caller_identity" "caller" {
